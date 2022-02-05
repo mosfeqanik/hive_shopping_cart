@@ -2,6 +2,7 @@
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:dio/dio.dart';
 import 'package:e_commerce_app/Utils/api.dart';
+import 'package:e_commerce_app/Utils/hive_data/hive_entity.dart';
 import 'package:e_commerce_app/screens/model/category.dart';
 import 'package:e_commerce_app/screens/model/products/products_data.dart';
 
@@ -9,6 +10,7 @@ import 'package:e_commerce_app/screens/model/products/products_data.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:get/get.dart';
+import 'package:hive_flutter/hive_flutter.dart';
 
 
 class HomeController extends GetxController with GetSingleTickerProviderStateMixin{
@@ -17,16 +19,32 @@ class HomeController extends GetxController with GetSingleTickerProviderStateMix
   var scrollController=ScrollController();
   var homePageName='Home'.obs;
   var categoryData=<Category>[].obs;
-
   RxObjectMixin<ProductsData> productData=ProductsData().obs;
+
+
+
+  var localDataList=<HiveEntity>[].obs;
 
   
   @override
   void onInit() {
     tabController=TabController(length: 4, vsync: this);
     _getHomeProductData();
+
+    _getLocalData();
     super.onInit();
   }
+
+
+  void _getLocalData()async{
+    var box = await Hive.openBox<HiveEntity>('samir_app_database');
+    ///
+    box.add(HiveEntity(title: 'Mobile Phone 1', price: '99', id: '110'));
+    box.add(HiveEntity(title: 'Mobile Phone 2', price: '199', id: '111'));
+
+    localDataList.value=box.values.toList();
+  }
+
 
   // void _getCategoryData() async{
   //   Dio _dio=Dio();

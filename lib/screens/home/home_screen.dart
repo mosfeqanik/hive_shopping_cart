@@ -72,8 +72,8 @@ class HomeScreen extends StatelessWidget {
                 child: Center(child: Text('Category Page')),
               ),
               Container(
-                color: Colors.red,
-                child: Center(child: Text('Favorite Page')),
+
+                child: _cartTab(),
               ),
               Container(
                 color: Colors.yellowAccent,
@@ -110,8 +110,8 @@ class HomeScreen extends StatelessWidget {
                 label: 'Category',
               ),
               BottomNavigationBarItem(
-                icon: Icon(Icons.favorite),
-                label: 'Favorite',
+                icon: Icon(Icons.shopping_cart_outlined),
+                label: 'Cart',
               ),
               BottomNavigationBarItem(
                 icon: Icon(Icons.person),
@@ -209,10 +209,10 @@ class HomeScreen extends StatelessWidget {
           crossAxisCount: ResponsiveHelper.isMobile(context)? 3:ResponsiveHelper.isTab(context)?4:ResponsiveHelper.isDesktop(context)?5:6,
         ),
         itemBuilder: (context, index) => GridViewItem(
-            name: _con.productData.value.products![index].name??'',
-            price: _con.productData.value.products![index].price.toString()??'',
-            url: _con.productData.value.products![index].image![0]??'',
-            id: _con.productData.value.products![index].id.toString()??'',
+            name: '${_con.productData.value.products![index].name}',
+            price: '${_con.productData.value.products![index].price}',
+            url: '${_con.productData.value.products![index].image![0].toString()}',
+            id: '${_con.productData.value.products![index].id.toString()}',
 
         ),
 
@@ -220,7 +220,41 @@ class HomeScreen extends StatelessWidget {
     );
   }
 
-  // _myGridView(){
+  _cartTab() {
+    return Obx(()=>ListView.builder(
+      itemCount: _con.localDataList.length,
+      itemBuilder: (context, index) => Container(
+
+        margin: const EdgeInsets.only(left: 5, right: 5, top: 5),
+        height: 120,
+        decoration: const BoxDecoration(
+            color: Colors.white,
+            borderRadius: BorderRadius.all(Radius.circular(10))
+        ),
+        child: Center(child: Text(_con.localDataList[index].title)),
+      ),
+
+    ));
+  }
+
+
+  // _cartTab() {
+  //   return Obx(()=>ListView.builder(
+  //     itemCount: _con.localData.length,
+  //     itemBuilder: (context, index) => Container(
+  //       margin: const EdgeInsets.all(10),
+  //       height: 120,
+  //       color: Colors.white,
+  //       child: Text('Name'),
+  //     ),
+  //
+  //   ));
+  // }
+
+
+
+
+// _myGridView(){
   //
   //   return Container(
   //     color: Colors.green,

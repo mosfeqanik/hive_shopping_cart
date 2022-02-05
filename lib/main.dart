@@ -4,10 +4,22 @@ import 'package:e_commerce_app/screens/home/home_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:get/get.dart';
+import 'package:hive_flutter/hive_flutter.dart';
+
+import 'Utils/hive_data/hive_entity.dart';
+
 
 
 void main() async{
   HttpOverrides.global = MyHttpOverrides();
+
+  ///Hive Setup
+  WidgetsFlutterBinding.ensureInitialized();
+  await Hive.initFlutter();
+  Hive.registerAdapter(HiveEntityAdapter());
+  await Hive.openBox<HiveEntity>('samir_app_database');
+
+
   runApp(const MyApp());
 }
 

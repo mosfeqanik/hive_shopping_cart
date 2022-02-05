@@ -39,17 +39,16 @@ dependencies:
   carousel_slider: ^4.0.0
   flutter_easyloading: ^3.0.3
   connectivity_plus: ^2.2.0
+  hive: ^2.0.5
+  hive_flutter: ^1.1.0
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
 
-  # The "flutter_lints" package below contains a set of recommended lints to
-  # encourage good coding practices. The lint set provided by the package is
-  # activated in the `analysis_options.yaml` file located at the root of your
-  # package. See that file for information about deactivating specific lint
-  # rules and activating additional ones.
   flutter_lints: ^1.0.0
+  hive_generator: ^1.1.2
+  build_runner: ^2.1.7
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
