@@ -1,7 +1,13 @@
 
+import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:dio/dio.dart';
+import 'package:e_commerce_app/Utils/api.dart';
+import 'package:e_commerce_app/screens/model/category.dart';
+import 'package:e_commerce_app/screens/model/products/products_data.dart';
+
 
 import 'package:flutter/material.dart';
+import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:get/get.dart';
 
 
@@ -10,13 +16,76 @@ class HomeController extends GetxController with GetSingleTickerProviderStateMix
   late TabController tabController;
   var scrollController=ScrollController();
   var homePageName='Home'.obs;
+  var categoryData=<Category>[].obs;
+
+  RxObjectMixin<ProductsData> productData=ProductsData().obs;
+
   
   @override
   void onInit() {
     tabController=TabController(length: 4, vsync: this);
+    _getHomeProductData();
     super.onInit();
   }
-  
+
+  // void _getCategoryData() async{
+  //   Dio _dio=Dio();
+  //   try{
+  //
+  //     var response= await _dio.get(API.getCategoryDataEndPoint);
+  //     print('My HTTP REQUEST: Class name $runtimeType : statusCode: ${response.statusCode}');
+  //     if(response.statusCode==200){
+  //
+  //
+  //               // var myData=response1.data['data'] as List;
+  //
+  //
+  //               var myData=response.data as List;
+  //
+  //               print(myData);
+  //
+  //               var postList=myData.map((e) => Category.fromJson(e)).toList();
+  //               print('postList $postList');
+  //
+  //               // var myReceivedList=myData.map((e) => PostModel.fromJson(e)).toList();
+  //               //
+  //               // print('HTTP Request: Before Insert Data ${myPostList.length} ');
+  //               categoryData.addAll(postList);
+  //               print(categoryData.length);
+  //
+  //
+  //       //
+  //       // var myResponse=response.data as List;
+  //       //
+  //       // // print(myResponse);
+  //       //
+  //       // List<CategoryModel> list=myResponse.map((e){
+  //       //   print(e);
+  //       //   return CategoryModel.fromJson(e);
+  //       // }).toList();
+  //       //
+  //       // print(list);
+  //       // // categoryData.value=list;
+  //       // // print('caterfksdf ${categoryData.length}');
+  //       //
+  //       //
+  //       //
+  //       //
+  //       // // categoryData.value=CategoryModel.fromJson(myResponse);
+  //       // // print(categoryData.value.name);
+  //
+  //     }else{
+  //     }
+  //   }catch(e){
+  //     print(e);
+  //   }
+  //
+  //
+  //
+  //
+  //
+  // }
+  //
   
   
   
@@ -128,6 +197,45 @@ class HomeController extends GetxController with GetSingleTickerProviderStateMix
   // }
   //
 
+
+
+  void _getHomeProductData() async{
+
+    var connectivityResult = await (Connectivity().checkConnectivity());
+
+    Dio _dio=Dio();
+    var myUrl=API.getProductDataEndPoint;
+    try{
+
+      if(connectivityResult ==ConnectivityResult.none){
+        print('No Internet Connection');
+        Get.snackbar('Ops!', 'No Internet Connection');
+
+      }else{
+
+        EasyLoading.show();
+        var response1= await _dio.get(myUrl);
+        print('HTTP Request: URL $myUrl');
+        print('HTTP Request: Status Code ${response1.statusCode}');
+        if(response1.statusCode==200){
+          EasyLoading.dismiss();
+
+          var myData=response1.data;
+          productData.value=ProductsData.fromJson(myData);
+          print(myData);
+        }else{
+          print('Data not found ');
+        }
+
+      }
+
+
+    }catch(e, l){
+      print(runtimeType);
+      print(e);
+      print(l);
+    }
+  }
 
 
 }

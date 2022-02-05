@@ -37,6 +37,8 @@ dependencies:
   get: ^4.6.1
   dio: ^4.0.4
   carousel_slider: ^4.0.0
+  flutter_easyloading: ^3.0.3
+  connectivity_plus: ^2.2.0
 
 dev_dependencies:
   flutter_test:

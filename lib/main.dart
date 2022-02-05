@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:e_commerce_app/screens/home/home_screen.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:get/get.dart';
 
 
@@ -23,7 +24,10 @@ class MyApp extends StatelessWidget {
       ),
 
 
+      builder: EasyLoading.init(),
       getPages: [
+
+
 
         GetPage(name: '/', page: () => HomeScreen(),transition: Transition.fadeIn ),
         // GetPage(name: CategoryScreen.routeName, page: () => CategoryScreen(),transition: Transition.fadeIn),
