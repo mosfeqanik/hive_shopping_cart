@@ -1,10 +1,15 @@
 
 import 'package:carousel_slider/carousel_slider.dart';
+import 'package:e_commerce_app/Utils/api.dart';
+import 'package:e_commerce_app/Utils/hive_data/hive_entity.dart';
 import 'package:e_commerce_app/Utils/responsive_helper.dart';
 import 'package:e_commerce_app/common_wigdet/gridview_item.dart';
+import 'package:e_commerce_app/screens/home/product_details.dart';
+import 'package:e_commerce_app/screens/home/product_details_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'home_controller.dart';
+import 'package:badges/badges.dart';
 
 class HomeScreen extends StatelessWidget {
 
@@ -41,8 +46,19 @@ class HomeScreen extends StatelessWidget {
       appBar: AppBar(
         title: Center(child: Text('E-commerce App')),
         actions: [
-          IconButton(onPressed: (){}, icon: Icon(Icons.search)),
-          IconButton(onPressed: (){}, icon: Icon(Icons.shopping_cart_outlined)),
+          // IconButton(onPressed: (){}, icon: Icon(Icons.search)),
+          // IconButton(onPressed: (){}, icon: Icon(Icons.shopping_cart_outlined)),
+          Padding(
+            
+            padding: const EdgeInsets.only(right: 20, top: 5),
+
+            child: Badge(
+              badgeContent: Obx(()=>Text(_con.localDataList.length.toString())),
+              child: const Icon(Icons.shopping_cart_outlined),
+            ),
+          ),
+
+
         ],
 
         // bottom: TabBar(
@@ -102,18 +118,21 @@ class HomeScreen extends StatelessWidget {
 
             items:  [
               BottomNavigationBarItem(
-                icon: Icon(Icons.home),
-                label: '${_controller.homePageName.value.toString()}',
+                icon: const Icon(Icons.home),
+                label: _controller.homePageName.value.toString(),
               ),
-              BottomNavigationBarItem(
+              const BottomNavigationBarItem(
                 icon: Icon(Icons.category),
                 label: 'Category',
               ),
               BottomNavigationBarItem(
-                icon: Icon(Icons.shopping_cart_outlined),
+                icon:           Badge(
+                  badgeContent: Obx(()=>Text(_con.localDataList.length.toString())),
+                  child: const Icon(Icons.shopping_cart_outlined),
+                ),
                 label: 'Cart',
               ),
-              BottomNavigationBarItem(
+              const BottomNavigationBarItem(
                 icon: Icon(Icons.person),
                 label: 'Profile',
               ),
@@ -169,7 +188,7 @@ class HomeScreen extends StatelessWidget {
           itemBuilder: (context, index, realIndex) => Container(
             width: screenWidth,
             height: screenWidth/3,
-            child: Image.network('https://demo.6amtech.com/grofresh/storage/app/public/banner/2021-06-21-60d0c567e5edd.png',fit: BoxFit.cover, ),
+            child: Image.network('https://www.pngitem.com/pimgs/m/310-3105318_transparent-special-offer-banner-png-png-download.png',fit: BoxFit.cover, ),
           ),
 
         options: CarouselOptions(
@@ -208,12 +227,39 @@ class HomeScreen extends StatelessWidget {
         gridDelegate:  SliverGridDelegateWithFixedCrossAxisCount(
           crossAxisCount: ResponsiveHelper.isMobile(context)? 3:ResponsiveHelper.isTab(context)?4:ResponsiveHelper.isDesktop(context)?5:6,
         ),
-        itemBuilder: (context, index) => GridViewItem(
-            name: '${_con.productData.value.products![index].name}',
-            price: '${_con.productData.value.products![index].price}',
-            url: '${_con.productData.value.products![index].image![0].toString()}',
-            id: '${_con.productData.value.products![index].id.toString()}',
+        itemBuilder: (context, index) => InkWell(
+          onTap: (){
+            print("Item Clicked");
+            print("Item Index $index");
 
+          ///  Get.find<ProductDetailsController>().selectedItemIndex.value=index; ///Data stored in another class by dependency  injection
+            Get.put(ProductDetailsController()).selectedItemIndex.value=index;
+
+            ///Data stored in another class by dependency  injection
+            // print('fsdfds ${Get.put(ProductDetailsController()).selectedItemIndex.value}');
+
+            Get.toNamed(ProductDetails.routeName);
+          },
+          child: GridViewItem(
+              name: '${_con.productData.value.products![index].name}',
+              price: '${_con.productData.value.products![index].price}',
+              url: _con.productData.value.products![index].image![0].toString(),
+              id: _con.productData.value.products![index].id.toString(),
+              isFavorite: _con.productData.value.products![index].isFavorite??false,
+              favoriteCallBack: (){
+
+                print("Favorite Status: ${_con.productData.value.products![index].isFavorite}");
+                print("Favorite Button clicked");
+
+              },
+              cartCallBack: (){
+                _con.insertShoppingCartData(HiveEntity(
+                    title: '${_con.productData.value.products![index].name}',
+                    price: '${_con.productData.value.products![index].price}', id: '${_con.productData.value.products![index].id}', image: "${API.productImageUrl}${ _con.productData.value.products![index].image![0].toString()}"));
+
+              },
+
+          ),
         ),
 
       )),
@@ -221,6 +267,7 @@ class HomeScreen extends StatelessWidget {
   }
 
   _cartTab() {
+    _con.getLocalData();
     return Obx(()=>ListView.builder(
       itemCount: _con.localDataList.length,
       itemBuilder: (context, index) => Container(

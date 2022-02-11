@@ -22,7 +22,8 @@ class Products {
       this.totalStock, 
       this.capacity, 
       this.dailyNeeds, 
-      this.wishlistCount, 
+      this.wishlistCount,
+      this.isFavorite =false
       // this.rating,
 
   });
@@ -97,6 +98,7 @@ class Products {
   int? capacity;
   int? dailyNeeds;
   int? wishlistCount;
+  bool? isFavorite;
   // List<dynamic>? rating;
 
   // Map<String, dynamic> toJson() {

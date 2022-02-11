@@ -20,19 +20,22 @@ class HiveEntityAdapter extends TypeAdapter<HiveEntity> {
       title: fields[0] as String,
       price: fields[1] as String,
       id: fields[2] as String,
+      image: fields[2] as String,
     );
   }
 
   @override
   void write(BinaryWriter writer, HiveEntity obj) {
     writer
-      ..writeByte(3)
+      ..writeByte(4)
       ..writeByte(0)
       ..write(obj.title)
       ..writeByte(1)
       ..write(obj.price)
       ..writeByte(2)
-      ..write(obj.id);
+      ..write(obj.id)
+    ..writeByte(3)
+    ..write(obj.image);
   }
 
   @override

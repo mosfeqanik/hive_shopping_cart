@@ -46,8 +46,8 @@ android {
         applicationId "com.example.e_commerce_app"
         minSdkVersion flutter.minSdkVersion
         targetSdkVersion flutter.targetSdkVersion
-        versionCode flutterVersionCode.toInteger()
-        versionName flutterVersionName
+        versionCode 19
+        versionName '1.0.0'
     }
 
     buildTypes {

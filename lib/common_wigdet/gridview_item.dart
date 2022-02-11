@@ -6,12 +6,19 @@ class GridViewItem extends StatelessWidget {
   String price;
   String url;
   String id;
+  bool isFavorite;
+  VoidCallback cartCallBack;
+  VoidCallback favoriteCallBack;
 
   GridViewItem({
     required this.name,
     required this.price,
     required this.url,
     required this.id,
+    required this.isFavorite,
+    required this.cartCallBack,
+    required this.favoriteCallBack,
+
 });
 
   @override
@@ -34,6 +41,7 @@ class GridViewItem extends StatelessWidget {
                 height: 80,
                 // color: Colors.deepOrangeAccent,
                 child: Image.network("${API.productImageUrl}$url"),
+
               ),
               Container(
                 height: 30,
@@ -48,14 +56,15 @@ class GridViewItem extends StatelessWidget {
             ],
           ),
         ),
-        const Positioned(
+         Positioned(
             left: 10,
             top: 10,
-            child: Icon(Icons.favorite_outlined)),
-        const Positioned(
+            child: IconButton(onPressed: favoriteCallBack, icon: Icon(isFavorite==true?Icons.favorite:Icons.favorite_border))),
+
+         Positioned(
             right: 10,
             top: 10,
-            child: Icon(Icons.shopping_cart_outlined)),
+            child: IconButton(onPressed: cartCallBack, icon: Icon(Icons.shopping_cart_outlined))),
 
       ],
     );

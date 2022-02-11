@@ -25,85 +25,126 @@ class HomeController extends GetxController with GetSingleTickerProviderStateMix
 
   var localDataList=<HiveEntity>[].obs;
 
+
+
+
   
   @override
   void onInit() {
     tabController=TabController(length: 4, vsync: this);
     _getHomeProductData();
 
-    _getLocalData();
+    getLocalData();
+
+
+    _getCategoryData();
+
+
     super.onInit();
   }
 
 
-  void _getLocalData()async{
+  void getLocalData()async{
     var box = await Hive.openBox<HiveEntity>('samir_app_database');
-    ///
-    box.add(HiveEntity(title: 'Mobile Phone 1', price: '99', id: '110'));
-    box.add(HiveEntity(title: 'Mobile Phone 2', price: '199', id: '111'));
-
     localDataList.value=box.values.toList();
   }
 
+  void insertShoppingCartData(HiveEntity entity)async{
+    var box = await Hive.openBox<HiveEntity>('samir_app_database');
+    box.add(entity);
+    getLocalData();
+  }
 
-  // void _getCategoryData() async{
-  //   Dio _dio=Dio();
-  //   try{
-  //
-  //     var response= await _dio.get(API.getCategoryDataEndPoint);
-  //     print('My HTTP REQUEST: Class name $runtimeType : statusCode: ${response.statusCode}');
-  //     if(response.statusCode==200){
-  //
-  //
-  //               // var myData=response1.data['data'] as List;
-  //
-  //
-  //               var myData=response.data as List;
-  //
-  //               print(myData);
-  //
-  //               var postList=myData.map((e) => Category.fromJson(e)).toList();
-  //               print('postList $postList');
-  //
-  //               // var myReceivedList=myData.map((e) => PostModel.fromJson(e)).toList();
-  //               //
-  //               // print('HTTP Request: Before Insert Data ${myPostList.length} ');
-  //               categoryData.addAll(postList);
-  //               print(categoryData.length);
-  //
-  //
-  //       //
-  //       // var myResponse=response.data as List;
-  //       //
-  //       // // print(myResponse);
-  //       //
-  //       // List<CategoryModel> list=myResponse.map((e){
-  //       //   print(e);
-  //       //   return CategoryModel.fromJson(e);
-  //       // }).toList();
-  //       //
-  //       // print(list);
-  //       // // categoryData.value=list;
-  //       // // print('caterfksdf ${categoryData.length}');
-  //       //
-  //       //
-  //       //
-  //       //
-  //       // // categoryData.value=CategoryModel.fromJson(myResponse);
-  //       // // print(categoryData.value.name);
-  //
-  //     }else{
-  //     }
-  //   }catch(e){
-  //     print(e);
-  //   }
-  //
-  //
-  //
-  //
-  //
-  // }
-  //
+
+  void deleteShoppingCartData(int index)async{
+    var box = await Hive.openBox<HiveEntity>('samir_app_database');
+    box.deleteAt(index);
+    getLocalData();
+  }
+
+
+  void updateShoppingCartData(int index, HiveEntity entity)async{
+    var box = await Hive.openBox<HiveEntity>('samir_app_database');
+    box.putAt(index, entity);
+    getLocalData();
+  }
+
+
+  void clearAllShoppingCartData(int index, HiveEntity entity)async{
+    var box = await Hive.openBox<HiveEntity>('samir_app_database');
+    await box.clear();
+    getLocalData();
+
+  }
+
+
+
+
+
+
+
+  void _getCategoryData() async{
+    Dio _dio=Dio();
+    try{
+
+      var response= await _dio.get(API.getCategoryDataEndPoint);
+      print('My HTTP REQUEST: Class name $runtimeType : statusCode: ${response.statusCode}');
+      if(response.statusCode==200){
+
+
+                // var myData=response1.data['data'] as List;
+
+
+                var myData=response.data as List;
+
+                print('postList $myData');
+
+                var postList=myData.map((e) => Category.fromJson(e)).toList();
+                print('postList $postList');
+
+
+
+
+
+                // var myReceivedList=myData.map((e) => PostModel.fromJson(e)).toList();
+                //
+                // print('HTTP Request: Before Insert Data ${myPostList.length} ');
+                categoryData.addAll(postList);
+                print(categoryData.length);
+
+
+        //
+        // var myResponse=response.data as List;
+        //
+        // // print(myResponse);
+        //
+        // List<CategoryModel> list=myResponse.map((e){
+        //   print(e);
+        //   return CategoryModel.fromJson(e);
+        // }).toList();
+        //
+        // print(list);
+        // // categoryData.value=list;
+        // // print('caterfksdf ${categoryData.length}');
+        //
+        //
+        //
+        //
+        // // categoryData.value=CategoryModel.fromJson(myResponse);
+        // // print(categoryData.value.name);
+
+      }else{
+      }
+    }catch(e){
+      print(e);
+    }
+
+
+
+
+
+  }
+
   
   
   

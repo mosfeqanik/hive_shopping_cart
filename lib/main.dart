@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:e_commerce_app/screens/home/home_screen.dart';
+import 'package:e_commerce_app/screens/home/product_details.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:get/get.dart';
@@ -42,7 +43,7 @@ class MyApp extends StatelessWidget {
 
 
         GetPage(name: '/', page: () => HomeScreen(),transition: Transition.fadeIn ),
-        // GetPage(name: CategoryScreen.routeName, page: () => CategoryScreen(),transition: Transition.fadeIn),
+        GetPage(name: ProductDetails.routeName, page: () => ProductDetails(),transition: Transition.fadeIn),
         // GetPage(name: HomeScreen.routeName, page: () => HomeScreen(),transition: Transition.fadeIn),
         // GetPage(name: LoginScreen.routeName, page: () => LoginScreen(),transition: Transition.fadeIn),
         // GetPage(name: DetailsScreen.routeName, page: () => DetailsScreen(),transition: Transition.fadeIn, ),
