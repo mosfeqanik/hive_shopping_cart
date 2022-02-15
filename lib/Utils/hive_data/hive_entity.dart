@@ -19,11 +19,15 @@ class HiveEntity {
   @HiveField(3)
   final String image;
 
+  @HiveField(4)
+  final int quantity;
+
   HiveEntity({
     required this.title,
     required this.price,
     required this.id,
     required this.image,
+    required this.quantity,
 });
 
 

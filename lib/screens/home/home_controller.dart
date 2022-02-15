@@ -46,6 +46,7 @@ class HomeController extends GetxController with GetSingleTickerProviderStateMix
 
   void getLocalData()async{
     var box = await Hive.openBox<HiveEntity>('samir_app_database');
+    localDataList.clear();
     localDataList.value=box.values.toList();
   }
 
@@ -76,6 +77,28 @@ class HomeController extends GetxController with GetSingleTickerProviderStateMix
     getLocalData();
 
   }
+
+  String calculateTotalCart(){
+    var count=0.0;
+    for (var element in localDataList) {
+      count=count+double.parse(calculateItemTotalPrice(element.price, element.quantity));
+    }
+
+    return '$count';
+  }
+
+  bool checkMyCartItem(String productId){
+    var isExsit=false;
+
+    for (var element in localDataList) {
+      if(productId==element.id){
+        isExsit=true;
+      }
+    }
+
+    return isExsit;
+  }
+
 
 
 
@@ -294,6 +317,12 @@ class HomeController extends GetxController with GetSingleTickerProviderStateMix
       print(e);
       print(l);
     }
+  }
+
+  String calculateItemTotalPrice(String price, int quantity) {
+    var p=price;
+    var total=p*quantity;
+    return "\$$total";
   }
 
 

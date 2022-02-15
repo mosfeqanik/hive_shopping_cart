@@ -253,9 +253,21 @@ class HomeScreen extends StatelessWidget {
 
               },
               cartCallBack: (){
-                _con.insertShoppingCartData(HiveEntity(
+
+                if(_con.checkMyCartItem('${_con.productData.value.products![index].id}')==true){
+                  print('Product already exsit');
+                }else{
+                  _con.insertShoppingCartData(HiveEntity(
                     title: '${_con.productData.value.products![index].name}',
-                    price: '${_con.productData.value.products![index].price}', id: '${_con.productData.value.products![index].id}', image: "${API.productImageUrl}${ _con.productData.value.products![index].image![0].toString()}"));
+                    price: '${_con.productData.value.products![index].price}',
+                    id: '${_con.productData.value.products![index].id}',
+                    image: "${API.productImageUrl}${ _con.productData.value.products![index].image![0].toString()}",
+                    quantity: 1,
+                  ));
+                }
+
+
+
 
               },
 
@@ -268,19 +280,118 @@ class HomeScreen extends StatelessWidget {
 
   _cartTab() {
     _con.getLocalData();
-    return Obx(()=>ListView.builder(
-      itemCount: _con.localDataList.length,
-      itemBuilder: (context, index) => Container(
+    return Obx(()=>Column(
+      children: [
 
-        margin: const EdgeInsets.only(left: 5, right: 5, top: 5),
-        height: 120,
-        decoration: const BoxDecoration(
-            color: Colors.white,
-            borderRadius: BorderRadius.all(Radius.circular(10))
-        ),
-        child: Center(child: Text(_con.localDataList[index].title)),
-      ),
+        Expanded(child: ListView.builder(
+          itemCount: _con.localDataList.length,
+          itemBuilder: (context, index) => Container(
 
+            margin:  EdgeInsets.only(left: screenWidth*0.01, right:screenWidth*0.01, top: 5), //0.1=10, 0.01=1
+            height: 120,
+            decoration: const BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.all(Radius.circular(10))
+            ),
+            ///100*0.3=30 100*0.7=70
+            child: Row(
+              children: [
+                Container(
+                  width: screenWidth*0.3,///30%  30+68=98
+                  // color: Colors.green,
+                  height: 120,
+                  child: Stack(
+                    children: [
+                      // ClipRRect(
+                      //   child: Image.network(_con.localDataList[index].image),
+                      // ),
+                      Container(
+                        height: 115,
+                        width: screenWidth*0.30,
+                        child: Image.network(_con.localDataList[index].image),
+                      ),
+
+                      Positioned(
+                        left: 5,
+                        top: 5,
+                        child: IconButton(onPressed: (){
+
+                          _con.deleteShoppingCartData(index);
+
+                        }, icon: const Center(child: Icon(Icons.delete))),),
+                    ],
+                  ),
+                ),
+                Container(
+                  width: screenWidth*0.63, ///68%
+                  // color: Colors.amber,
+                  height: 120,
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      ///10*1=10
+                      ///10*2=20
+                      ///10*3=30
+                      Text(_con.localDataList[index].title, style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),),
+                      Text(_con.calculateItemTotalPrice(_con.localDataList[index].price, _con.localDataList[index].quantity),style: const TextStyle(fontSize: 14, fontWeight: FontWeight.bold)),
+                    ],
+                  ),
+                ),
+                Container(
+                  padding: EdgeInsets.only(right: 10),
+                  width: screenWidth*0.05, ///68%
+                  // color: Colors.red,
+                  height: 120,
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      IconButton(onPressed: (){
+
+                        _con.updateShoppingCartData(index,HiveEntity(
+                          title: '${_con.productData.value.products![index].name}',
+                          price: '${_con.productData.value.products![index].price}',
+                          id: '${_con.productData.value.products![index].id}',
+                          image: _con.localDataList[index].image,
+                          quantity: _con.localDataList[index].quantity+1,
+                        ));
+
+
+                      }, icon: const Center(child: Icon(Icons.add))),
+                      Center(child: Text(_con.localDataList[index].quantity.toString())),
+                      IconButton(onPressed: (){
+
+                        if(_con.localDataList[index].quantity>1){
+                          _con.updateShoppingCartData(index,HiveEntity(
+                            title: '${_con.productData.value.products![index].name}',
+                            price: '${_con.productData.value.products![index].price}',
+                            id: '${_con.productData.value.products![index].id}',
+                            image: _con.localDataList[index].image,
+                            quantity: _con.localDataList[index].quantity-1,
+                          ));
+                        }else{
+                          print("Can't remove");
+                        }
+
+
+
+
+
+                      }, icon: const Center(child: Icon(Icons.minimize_outlined))),
+                    ],
+                  ),
+                ),
+              ],
+            ),
+          ),
+
+        )),
+        Container(
+
+          child: Center(child: Text("Total Price: \$ ${_con.calculateTotalCart()}", style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 18),)),
+          height: 40,width: double.infinity,),
+      ],
     ));
   }
 

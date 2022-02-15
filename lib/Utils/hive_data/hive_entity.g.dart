@@ -20,7 +20,8 @@ class HiveEntityAdapter extends TypeAdapter<HiveEntity> {
       title: fields[0] as String,
       price: fields[1] as String,
       id: fields[2] as String,
-      image: fields[2] as String,
+      image: fields[3] as String,
+      quantity: fields[4] as int,
     );
   }
 
@@ -34,8 +35,10 @@ class HiveEntityAdapter extends TypeAdapter<HiveEntity> {
       ..write(obj.price)
       ..writeByte(2)
       ..write(obj.id)
-    ..writeByte(3)
-    ..write(obj.image);
+      ..writeByte(3)
+      ..write(obj.image)
+      ..writeByte(4)
+      ..write(obj.quantity);
   }
 
   @override

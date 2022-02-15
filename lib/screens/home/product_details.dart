@@ -68,12 +68,25 @@ class ProductDetails extends StatelessWidget {
                   Padding(padding: const EdgeInsets.only(right: 10),
                       child: IconButton(onPressed: (){
 
-                        Get.put(HomeController()).insertShoppingCartData(HiveEntity(
-                            title: '${_controller.productData.value.products![_controller.selectedItemIndex.value].name}',
-                            price: '${_controller.productData.value.products![_controller.selectedItemIndex.value].price}',
-                            id: '${_controller.productData.value.products![_controller.selectedItemIndex.value].id}',
-                            image: "${API.productImageUrl}${ _controller.productData.value.products![_controller.selectedItemIndex.value].image![0].toString()}")
-                        );
+
+                        if(Get.put(HomeController()).checkMyCartItem('${_controller.productData.value.products![_controller.selectedItemIndex.value].id}')==true){
+                          print('Product already exsit');
+                        }else{
+                          Get.put(HomeController()).insertShoppingCartData(HiveEntity(
+                              title: '${_controller.productData.value.products![_controller.selectedItemIndex.value].name}',
+                              price: '${_controller.productData.value.products![_controller.selectedItemIndex.value].price}',
+                              id: '${_controller.productData.value.products![_controller.selectedItemIndex.value].id}',
+                              image: "${API.productImageUrl}${ _controller.productData.value.products![_controller.selectedItemIndex.value].image![0].toString()}",
+                              quantity: 1,
+                          ),
+
+                          );
+
+                        }
+
+
+
+
 
 
 
